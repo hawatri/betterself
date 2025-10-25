@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 59 130 246; /* blue-500 */
+    --color-primary-dark: 37 99 235; /* blue-600 */
+    --color-background: 249 250 251; /* gray-50 */
+    --color-surface: 255 255 255; /* white */
+    --color-text: 17 24 39; /* gray-900 */
+    --color-text-secondary: 75 85 99; /* gray-600 */
+    --color-border: 229 231 235; /* gray-200 */
+  }
+
+  .dark {
+    --color-primary: 59 130 246; /* blue-500 */
+    --color-primary-dark: 37 99 235; /* blue-600 */
+    --color-background: 17 24 39; /* gray-900 */
+    --color-surface: 31 41 55; /* gray-800 */
+    --color-text: 249 250 251; /* gray-50 */
+    --color-text-secondary: 156 163 175; /* gray-400 */
+    --color-border: 55 65 81; /* gray-700 */
+  }
+
+  html {
+    @apply transition-colors duration-200;
+  }
+
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700;
+  }
+
+  .input {
+    @apply bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-50 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-blue-500 focus:border-transparent;
+  }
+
+  .button-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white;
+  }
+
+  .button-secondary {
+    @apply bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300;
+  }
+}

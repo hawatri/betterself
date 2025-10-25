@@ -28,21 +28,21 @@ const MonthlySetupModal: React.FC<MonthlySetupModalProps> = ({ onSave, onClose, 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">Monthly Setup</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50">Monthly Setup</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6">
           <div className="space-y-6">
             <div>
-              <label htmlFor="monthly-credit" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="monthly-credit" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <div className="flex items-center space-x-2">
                   <DollarSign className="w-4 h-4" />
                   <span>Monthly Available Credit</span>
@@ -56,16 +56,16 @@ const MonthlySetupModal: React.FC<MonthlySetupModalProps> = ({ onSave, onClose, 
                 placeholder="Enter your monthly budget"
                 step="0.01"
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-50 placeholder-gray-500 dark:placeholder-gray-400"
                 autoFocus
               />
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                 Total amount available for spending this month
               </p>
             </div>
 
             <div>
-              <label htmlFor="daily-target" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="daily-target" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <div className="flex items-center space-x-2">
                   <Target className="w-4 h-4" />
                   <span>Daily Spending Target</span>
@@ -79,17 +79,17 @@ const MonthlySetupModal: React.FC<MonthlySetupModalProps> = ({ onSave, onClose, 
                 placeholder="Enter daily spending limit"
                 step="0.01"
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-50 placeholder-gray-500 dark:placeholder-gray-400"
               />
               {suggestedTarget && (
                 <div className="mt-2">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     Suggested: {formatCurrency(parseFloat(suggestedTarget))} (monthly credit ÷ 30 days)
                   </p>
                   <button
                     type="button"
                     onClick={() => setDailyTarget(suggestedTarget)}
-                    className="text-sm text-blue-600 hover:text-blue-700 underline"
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
                   >
                     Use suggested amount
                   </button>
@@ -97,9 +97,9 @@ const MonthlySetupModal: React.FC<MonthlySetupModalProps> = ({ onSave, onClose, 
               )}
             </div>
 
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-2">How it works:</h4>
-              <ul className="text-sm text-blue-800 space-y-1">
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">How it works:</h4>
+              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                 <li>• Set your total monthly budget</li>
                 <li>• Define a daily spending target</li>
                 <li>• Track daily expenses automatically</li>
@@ -112,7 +112,7 @@ const MonthlySetupModal: React.FC<MonthlySetupModalProps> = ({ onSave, onClose, 
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>

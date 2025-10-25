@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, DollarSign, Clock, Plus, Target, PiggyBank, CreditCard } from 'lucide-react';
+import { Calendar, DollarSign, Clock, Plus, Target, PiggyBank, CreditCard, Sun, Moon } from 'lucide-react';
 import CalendarView from './components/CalendarView';
 import DailyView from './components/DailyView';
 import MonthlySetupModal from './components/MonthlySetupModal';
 import { formatCurrency, formatDate, getCurrentMonth, getDaysInMonth } from './utils/dateUtils';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { useTheme } from './hooks/useTheme';
 import type { AppData, DailyData } from './types';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [showMonthlySetup, setShowMonthlySetup] = useState(false);
+  const [theme, setTheme] = useTheme();
   
   const [appData, setAppData] = useLocalStorage<AppData>('financeAppData', {
     monthlyCredit: 0,
@@ -95,23 +97,31 @@ function App() {
   const remainingCredit = calculateRemainingCredit();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <DollarSign className="w-8 h-8 text-blue-600" />
-                <h1 className="text-2xl font-bold text-gray-900">FinanceFlow</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">FinanceFlow</h1>
               </div>
             </div>
             
             <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                 <Clock className="w-4 h-4" />
                 <span>{getCurrentDateTime()}</span>
               </div>
+              
+              <button
+                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                className="flex items-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+                <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
+              </button>
               
               <button
                 onClick={() => setShowMonthlySetup(true)}
@@ -126,10 +136,10 @@ function App() {
       </div>
 
       {/* Financial Summary Bar */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-700 dark:to-blue-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+            <div className="bg-white/10 dark:bg-white/5 backdrop-blur rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100 text-sm">Monthly Credit</p>
@@ -139,7 +149,7 @@ function App() {
               </div>
             </div>
             
-            <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+            <div className="bg-white/10 dark:bg-white/5 backdrop-blur rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100 text-sm">Remaining</p>
@@ -151,7 +161,7 @@ function App() {
               </div>
             </div>
             
-            <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+            <div className="bg-white/10 dark:bg-white/5 backdrop-blur rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100 text-sm">Daily Target</p>
@@ -161,7 +171,7 @@ function App() {
               </div>
             </div>
             
-            <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+            <div className="bg-white/10 dark:bg-white/5 backdrop-blur rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100 text-sm">Total Savings</p>
@@ -179,12 +189,12 @@ function App() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Calendar Section */}
           <div className="lg:w-1/3">
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="card p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">Calendar</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50">Calendar</h2>
                 <button
                   onClick={() => setShowCalendar(!showCalendar)}
-                  className="flex items-center space-x-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                  className="flex items-center space-x-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                 >
                   <Calendar className="w-4 h-4" />
                   <span>{showCalendar ? 'Hide' : 'Show'} Calendar</span>
@@ -199,9 +209,9 @@ function App() {
                 />
               )}
               
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm font-medium text-gray-700 mb-2">Selected Date:</p>
-                <p className="text-lg font-semibold text-gray-900">
+              <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Selected Date:</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-gray-50">
                   {formatDate(selectedDate)}
                 </p>
               </div>

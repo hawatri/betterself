@@ -85,8 +85,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect,
             ${isSelected 
               ? 'bg-blue-600 text-white shadow-lg transform scale-105' 
               : isToday
-                ? 'bg-blue-50 text-blue-600 border-2 border-blue-200'
-                : 'text-gray-700 hover:bg-gray-100'
+                ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-2 border-blue-200 dark:border-blue-700'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
             }
             ${hasData ? 'font-bold' : ''}
           `}
@@ -103,25 +103,25 @@ const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect,
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-gray-800">
       {/* Calendar Header */}
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={() => navigateMonth('prev')}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
         >
-          <ChevronLeft className="w-5 h-5 text-gray-600" />
+          <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
         </button>
         
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
           {getMonthName(currentMonth)} {currentYear}
         </h3>
         
         <button
           onClick={() => navigateMonth('next')}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
         >
-          <ChevronRight className="w-5 h-5 text-gray-600" />
+          <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
         </button>
       </div>
 
@@ -129,7 +129,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect,
       <div className="grid grid-cols-7 gap-1 mb-2">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
           <div key={day} className="h-8 flex items-center justify-center">
-            <span className="text-xs font-medium text-gray-500">{day}</span>
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{day}</span>
           </div>
         ))}
       </div>
@@ -139,24 +139,24 @@ const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect,
       </div>
 
       {/* Legend */}
-      <div className="mt-4 pt-4 border-t border-gray-200">
-        <p className="text-xs font-medium text-gray-600 mb-2">Legend:</p>
+      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Legend:</p>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-red-500 rounded-full" />
-            <span className="text-gray-600">Spending</span>
+            <span className="text-gray-600 dark:text-gray-400">Spending</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-blue-400 rounded-full" />
-            <span className="text-gray-600">Tasks</span>
+            <span className="text-gray-600 dark:text-gray-400">Tasks</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-gray-500 rounded-full" />
-            <span className="text-gray-600">Notes</span>
+            <span className="text-gray-600 dark:text-gray-400">Notes</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-purple-500 rounded-full" />
-            <span className="text-gray-600">All</span>
+            <span className="text-gray-600 dark:text-gray-400">All</span>
           </div>
         </div>
       </div>
