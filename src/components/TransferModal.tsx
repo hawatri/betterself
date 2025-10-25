@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { formatCurrency } from '../utils/dateUtils';
 
@@ -8,16 +8,22 @@ interface TransferModalProps {
   onSave: (amount: number) => void;
   onClose: () => void;
   type: 'savings' | 'borrow';
+  initialValue?: number;
 }
 
-const TransferModal: React.FC<TransferModalProps> = ({ title, maxAmount, onSave, onClose, type }) => {
-  const [amount, setAmount] = useState('');
+const TransferModal: React.FC<TransferModalProps> = ({ title, maxAmount, onSave, onClose, type, initialValue = 0 }) => {
+  const [amount, setAmount] = useState(initialValue > 0 ? initialValue.toString() : '');
+
+  // Update amount when initialValue changes
+  useEffect(() => {
+    setAmount(initialValue > 0 ? initialValue.toString() : '');
+  }, [initialValue]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const numAmount = parseFloat(amount);
-    if (numAmount && numAmount > 0) {
+    if (numAmount >= 0) { // Allow 0 for deleting borrowed money
       if (type === 'savings' && maxAmount && numAmount > maxAmount) {
         alert(`Cannot transfer more than ${formatCurrency(maxAmount)}`);
         return;
@@ -43,7 +49,7 @@ const TransferModal: React.FC<TransferModalProps> = ({ title, maxAmount, onSave,
         <form onSubmit={handleSubmit} className="p-6">
           <div>
             <label htmlFor="amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Amount ($)
+              Amount (₹)
             </label>
             <input
               type="number"

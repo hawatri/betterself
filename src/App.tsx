@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, DollarSign, Clock, Plus, Target, PiggyBank, CreditCard, Sun, Moon } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Calendar, CreditCard, Clock, Target, PiggyBank, Sun, Moon } from 'lucide-react';
 import CalendarView from './components/CalendarView';
 import DailyView from './components/DailyView';
 import MonthlySetupModal from './components/MonthlySetupModal';
-import { formatCurrency, formatDate, getCurrentMonth, getDaysInMonth } from './utils/dateUtils';
+import { formatCurrency, formatDate, getCurrentMonth } from './utils/dateUtils';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useTheme } from './hooks/useTheme';
 import type { AppData, DailyData } from './types';
@@ -83,6 +83,16 @@ function App() {
     return appData.monthlyCredit - totalSpent - totalSavingsTransferred + totalBorrowed;
   };
 
+  const calculateAvailableSavings = () => {
+    let totalBorrowed = 0;
+    Object.values(appData.dailyData).forEach((day) => {
+      if (day.borrowed) {
+        totalBorrowed += day.borrowed;
+      }
+    });
+    return appData.totalSavings - totalBorrowed;
+  };
+
   const getCurrentDateTime = () => {
     return currentDate.toLocaleString('en-US', {
       weekday: 'long',
@@ -94,7 +104,8 @@ function App() {
     });
   };
 
-  const remainingCredit = calculateRemainingCredit();
+  const remainingCredit = useMemo(() => calculateRemainingCredit(), [appData]);
+  const availableSavings = useMemo(() => calculateAvailableSavings(), [appData]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -104,7 +115,7 @@ function App() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <DollarSign className="w-8 h-8 text-blue-600" />
+                <CreditCard className="w-8 h-8 text-blue-600" />
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">FinanceFlow</h1>
               </div>
             </div>
@@ -145,7 +156,7 @@ function App() {
                   <p className="text-blue-100 text-sm">Monthly Credit</p>
                   <p className="text-2xl font-bold">{formatCurrency(appData.monthlyCredit)}</p>
                 </div>
-                <DollarSign className="w-8 h-8 text-blue-200" />
+                <CreditCard className="w-8 h-8 text-blue-200" />
               </div>
             </div>
             
@@ -174,8 +185,8 @@ function App() {
             <div className="bg-white/10 dark:bg-white/5 backdrop-blur rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-100 text-sm">Total Savings</p>
-                  <p className="text-2xl font-bold">{formatCurrency(appData.totalSavings)}</p>
+                  <p className="text-blue-100 text-sm">Available Savings</p>
+                  <p className="text-2xl font-bold">{formatCurrency(availableSavings)}</p>
                 </div>
                 <PiggyBank className="w-8 h-8 text-blue-200" />
               </div>

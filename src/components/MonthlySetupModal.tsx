@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, DollarSign, Target } from 'lucide-react';
+import { X, CreditCard, Target } from 'lucide-react';
 import { formatCurrency } from '../utils/dateUtils';
 
 interface MonthlySetupModalProps {
@@ -44,7 +44,7 @@ const MonthlySetupModal: React.FC<MonthlySetupModalProps> = ({ onSave, onClose, 
             <div>
               <label htmlFor="monthly-credit" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <div className="flex items-center space-x-2">
-                  <DollarSign className="w-4 h-4" />
+                  <CreditCard className="w-4 h-4" />
                   <span>Monthly Available Credit</span>
                 </div>
               </label>
@@ -53,7 +53,7 @@ const MonthlySetupModal: React.FC<MonthlySetupModalProps> = ({ onSave, onClose, 
                 id="monthly-credit"
                 value={monthlyCredit}
                 onChange={(e) => setMonthlyCredit(e.target.value)}
-                placeholder="Enter your monthly budget"
+                placeholder="Enter your monthly budget (₹)"
                 step="0.01"
                 min="0"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-50 placeholder-gray-500 dark:placeholder-gray-400"
@@ -76,7 +76,7 @@ const MonthlySetupModal: React.FC<MonthlySetupModalProps> = ({ onSave, onClose, 
                 id="daily-target"
                 value={dailyTarget}
                 onChange={(e) => setDailyTarget(e.target.value)}
-                placeholder="Enter daily spending limit"
+                placeholder="Enter daily spending limit (₹)"
                 step="0.01"
                 min="0"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-50 placeholder-gray-500 dark:placeholder-gray-400"
