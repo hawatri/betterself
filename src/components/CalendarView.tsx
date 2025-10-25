@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getMonthName, getDaysInMonth, formatDate, isSameDay } from '../utils/dateUtils';
+import { getMonthName, getDaysInMonth, formatDate, isSameDay, createLocalDate } from '../utils/dateUtils';
 import type { DailyData } from '../types';
 
 interface CalendarViewProps {
@@ -12,6 +12,12 @@ interface CalendarViewProps {
 const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect, dailyData }) => {
   const [currentMonth, setCurrentMonth] = React.useState(selectedDate.getMonth());
   const [currentYear, setCurrentYear] = React.useState(selectedDate.getFullYear());
+
+  // Update calendar view when selectedDate changes
+  React.useEffect(() => {
+    setCurrentMonth(selectedDate.getMonth());
+    setCurrentYear(selectedDate.getFullYear());
+  }, [selectedDate]);
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     if (direction === 'prev') {
@@ -32,7 +38,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect,
   };
 
   const daysInMonth = getDaysInMonth(currentYear, currentMonth);
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const firstDayOfMonth = createLocalDate(currentYear, currentMonth, 1).getDay();
   const today = new Date();
 
   const hasDataForDate = (date: Date): boolean => {
@@ -70,7 +76,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect,
 
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentYear, currentMonth, day);
+      const date = createLocalDate(currentYear, currentMonth, day);
       const isSelected = isSameDay(date, selectedDate);
       const isToday = isSameDay(date, today);
       const hasData = hasDataForDate(date);
