@@ -5,14 +5,17 @@ import type { DailyData, SpendingEntry, Task } from '../types';
 import SpendingModal from './SpendingModal';
 import TaskModal from './TaskModal';
 import TransferModal from './TransferModal';
+import ExcessSpendingModal from './ExcessSpendingModal';
 
 interface DailyViewProps {
   selectedDate: Date;
   dailyData: DailyData;
   previousDayData?: DailyData;
   dailyTarget: number;
+  remainingCredit: number;
   onUpdateDailyData: (data: Partial<DailyData>) => void;
-  onUpdateSavings: (amount: number) => void;
+  onUpdateSavings: (amount: number, dailySavingsData?: Partial<DailyData>) => void;
+  onRecordExcessSpending: (amount: number, reason: string) => void;
 }
 
 const DailyView: React.FC<DailyViewProps> = ({
@@ -20,16 +23,24 @@ const DailyView: React.FC<DailyViewProps> = ({
   dailyData,
   previousDayData,
   dailyTarget,
+  remainingCredit,
   onUpdateDailyData,
-  onUpdateSavings
+  onUpdateSavings,
+  onRecordExcessSpending
 }) => {
   const [showSpendingModal, setShowSpendingModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showBorrowModal, setShowBorrowModal] = useState(false);
+  const [showExcessSpendingModal, setShowExcessSpendingModal] = useState(false);
   const [notes, setNotes] = useState(dailyData.notes || '');
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [showEditBorrowModal, setShowEditBorrowModal] = useState(false);
+
+  // Update notes state when dailyData.notes changes
+  useEffect(() => {
+    setNotes(dailyData.notes || '');
+  }, [dailyData.notes]);
 
   // Auto-save notes after 1 second of no typing
   useEffect(() => {
@@ -61,7 +72,12 @@ const DailyView: React.FC<DailyViewProps> = ({
   const isOverTarget = totalSpent > dailyTarget;
   const currentDue = (dailyData.due || 0) + (isOverTarget ? totalSpent - dailyTarget : 0);
 
+  // Calculate available amount for excess spending (from total remaining credit)
+  // Excess spending is discretionary spending that deducts from remaining monthly credit
+  const availableForExcess = Math.max(0, remainingCredit);
+
   const addSpending = (description: string, amount: number) => {
+    console.log("Adding spending entry:", description, amount);
     const newEntry: SpendingEntry = {
       id: Date.now().toString(),
       description,
@@ -70,6 +86,7 @@ const DailyView: React.FC<DailyViewProps> = ({
     };
 
     const updatedSpending = [...(dailyData.spending || []), newEntry];
+    console.log("Updated spending array:", updatedSpending);
     onUpdateDailyData({ spending: updatedSpending });
   };
 
@@ -90,6 +107,7 @@ const DailyView: React.FC<DailyViewProps> = ({
   };
 
   const addTask = (description: string) => {
+    console.log("Adding task:", description);
     const newTask: Task = {
       id: Date.now().toString(),
       description,
@@ -98,6 +116,7 @@ const DailyView: React.FC<DailyViewProps> = ({
     };
 
     const updatedTasks = [...(dailyData.tasks || []), newTask];
+    console.log("Updated tasks array:", updatedTasks);
     onUpdateDailyData({ tasks: updatedTasks });
   };
 
@@ -114,35 +133,98 @@ const DailyView: React.FC<DailyViewProps> = ({
   };
 
   const transferToSavings = (amount: number) => {
+    console.log("=== transferToSavings called ===");
+    console.log("Transferring to savings:", amount);
     const currentTransferred = dailyData.savingsTransferred || 0;
-    onUpdateDailyData({ savingsTransferred: currentTransferred + amount });
-    onUpdateSavings(amount);
+    const newSavingsTransferred = currentTransferred + amount;
+    console.log("New savings transferred:", newSavingsTransferred);
+    console.log("Calling onUpdateSavings with:", amount, { savingsTransferred: newSavingsTransferred });
+    onUpdateSavings(amount, { savingsTransferred: newSavingsTransferred });
+    console.log("=== transferToSavings finished ===");
   };
 
   const borrowMoney = (amount: number) => {
+    console.log("=== borrowMoney called ===");
+    console.log("Borrowing amount:", amount);
+    console.log("Current borrowed:", dailyData.borrowed || 0);
     const currentBorrowed = dailyData.borrowed || 0;
-    onUpdateDailyData({ borrowed: currentBorrowed + amount });
-    // Deduct from total savings when borrowing
-    onUpdateSavings(-amount);
+    const newBorrowed = currentBorrowed + amount;
+    console.log("New borrowed amount:", newBorrowed);
+    // Deduct from total savings when borrowing (money leaves the savings account)
+    console.log("Amount to deduct from savings:", -amount);
+    if (amount > 0) {
+      onUpdateSavings(-amount, { borrowed: newBorrowed });
+    } else {
+      console.log("Invalid amount, not calling onUpdateSavings");
+    }
+    console.log("=== borrowMoney finished ===");
+  };
+
+  const recordExcessSpending = (amount: number, reason: string) => {
+    console.log("Recording excess spending:", amount, reason);
+    // Call the new function passed from App component
+    onRecordExcessSpending(amount, reason);
   };
 
   const editBorrowedMoney = (newAmount: number) => {
+    console.log("=== editBorrowedMoney called ===");
+    console.log("Editing borrowed amount to:", newAmount);
     const currentBorrowed = dailyData.borrowed || 0;
+    console.log("Current borrowed:", currentBorrowed);
     const difference = newAmount - currentBorrowed;
+    console.log("Difference:", difference);
     
-    onUpdateDailyData({ borrowed: newAmount });
     // Only adjust total savings by the difference
+    // Prevent double calls by checking if difference is not zero
     if (difference !== 0) {
-      onUpdateSavings(-difference);
+      console.log("Calling onUpdateSavings with:", -difference, { borrowed: newAmount });
+      onUpdateSavings(-difference, { borrowed: newAmount });
+    } else {
+      console.log("No difference, not calling onUpdateSavings");
     }
     setShowEditBorrowModal(false);
+    console.log("=== editBorrowedMoney finished ===");
   };
 
   const deleteBorrowedMoney = () => {
+    console.log("=== deleteBorrowedMoney called ===");
+    console.log("Deleting borrowed amount");
     const currentBorrowed = dailyData.borrowed || 0;
-    onUpdateDailyData({ borrowed: 0 });
+    console.log("Current borrowed:", currentBorrowed);
     // Add back to total savings when deleting borrowed amount
-    onUpdateSavings(currentBorrowed);
+    // Prevent double calls by checking if there's actually borrowed amount
+    if (currentBorrowed > 0) {
+      console.log("Calling onUpdateSavings with:", currentBorrowed, { borrowed: 0 });
+      onUpdateSavings(currentBorrowed, { borrowed: 0 });
+    } else {
+      console.log("No borrowed amount, not calling onUpdateSavings");
+    }
+    console.log("=== deleteBorrowedMoney finished ===");
+  };
+
+  // New function to clear due amounts
+  const clearDue = () => {
+    if (currentDue <= 0) return;
+    
+    // Calculate how much we can clear based on remaining target
+    const amountToClear = Math.min(currentDue, remainingTarget);
+    
+    // Add a spending entry for "Clearing due"
+    const newEntry: SpendingEntry = {
+      id: `clear-due-${Date.now()}`,
+      description: "Clearing due",
+      amount: amountToClear,
+      timestamp: new Date()
+    };
+    
+    // Update daily data with new spending entry and reduced due
+    const updatedSpending = [...(dailyData.spending || []), newEntry];
+    const newDue = currentDue - amountToClear;
+    
+    onUpdateDailyData({ 
+      spending: updatedSpending,
+      due: newDue > 0 ? newDue : undefined // Remove due if fully cleared
+    });
   };
 
   return (
@@ -175,8 +257,13 @@ const DailyView: React.FC<DailyViewProps> = ({
               <p className={`text-2xl font-bold ${currentDue > 0 ? 'text-orange-600' : 'text-gray-900 dark:text-gray-50'}`}>
                 {formatCurrency(currentDue)}
               </p>
-              {remainingTarget > 0 && (
-                <p className="text-sm text-green-600 dark:text-green-400">Can save: {formatCurrency(remainingTarget)}</p>
+              {currentDue > 0 && remainingTarget > 0 && (
+                <button
+                  onClick={clearDue}
+                  className="mt-2 px-3 py-1 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 transition-colors"
+                >
+                  Clear Due
+                </button>
               )}
             </div>
             <div className={`p-3 rounded-lg ${currentDue > 0 ? 'bg-orange-100' : 'bg-gray-100'}`}>
@@ -192,6 +279,9 @@ const DailyView: React.FC<DailyViewProps> = ({
               <p className="text-2xl font-bold text-green-600">
                 {formatCurrency(dailyData.savingsTransferred || 0)}
               </p>
+              {remainingTarget > 0 && (
+                <p className="text-sm text-green-600 dark:text-green-400">Can save: {formatCurrency(remainingTarget)}</p>
+              )}
             </div>
             <div className="p-3 bg-green-100 rounded-lg">
               <PiggyBank className="w-6 h-6 text-green-600" />
@@ -260,6 +350,14 @@ const DailyView: React.FC<DailyViewProps> = ({
             <CreditCard className="w-4 h-4" />
             <span>Borrow Money</span>
           </button>
+
+          <button
+            onClick={() => setShowExcessSpendingModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            <TrendingUp className="w-4 h-4" />
+            <span>Excess Spending</span>
+          </button>
         </div>
       </div>
 
@@ -302,6 +400,21 @@ const DailyView: React.FC<DailyViewProps> = ({
               )) || (
                 <p className="text-gray-500 dark:text-gray-400 text-center py-4">No spending entries yet</p>
               )}
+              
+              {/* Excess Spending Entry */}
+              {dailyData.excessSpending && dailyData.excessSpending > 0 && (
+                <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                  <div className="flex-1">
+                    <p className="font-medium text-red-800 dark:text-red-200">Excess Spending</p>
+                    <p className="text-sm text-red-600 dark:text-red-400">
+                      {dailyData.excessSpendingReason || 'No reason provided'}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <p className="font-semibold text-red-600">{formatCurrency(dailyData.excessSpending)}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -310,7 +423,10 @@ const DailyView: React.FC<DailyViewProps> = ({
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Daily Tasks</h3>
               <button
-                onClick={() => setShowTaskModal(true)}
+                onClick={() => {
+                  console.log("Add Task button clicked");
+                  setShowTaskModal(true);
+                }}
                 className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
               >
                 <Plus className="w-4 h-4" />
@@ -419,6 +535,14 @@ const DailyView: React.FC<DailyViewProps> = ({
           onSave={borrowMoney}
           onClose={() => setShowBorrowModal(false)}
           type="borrow"
+        />
+      )}
+
+      {showExcessSpendingModal && (
+        <ExcessSpendingModal
+          onSave={recordExcessSpending}
+          onClose={() => setShowExcessSpendingModal(false)}
+          maxAmount={availableForExcess}
         />
       )}
 

@@ -19,6 +19,8 @@ export interface DailyData {
   due?: number;
   savingsTransferred?: number;
   borrowed?: number;
+  excessSpending?: number;
+  excessSpendingReason?: string;
 }
 
 export interface AppData {
