@@ -24,8 +24,9 @@ const TransferModal: React.FC<TransferModalProps> = ({ title, maxAmount, onSave,
     
     const numAmount = parseFloat(amount);
     if (numAmount >= 0) { // Allow 0 for deleting borrowed money
-      if (type === 'savings' && maxAmount && numAmount > maxAmount) {
-        alert(`Cannot transfer more than ${formatCurrency(maxAmount)}`);
+      if (maxAmount && numAmount > maxAmount) {
+        const action = type === 'savings' ? 'transfer' : 'borrow';
+        alert(`Cannot ${action} more than ${formatCurrency(maxAmount)}`);
         return;
       }
       onSave(numAmount);
@@ -63,9 +64,9 @@ const TransferModal: React.FC<TransferModalProps> = ({ title, maxAmount, onSave,
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-50 placeholder-gray-500 dark:placeholder-gray-400"
               autoFocus
             />
-            {type === 'savings' && maxAmount && (
+            {maxAmount && (
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Maximum available: {formatCurrency(maxAmount)}
+                Maximum {type === 'savings' ? 'available' : 'can borrow'}: {formatCurrency(maxAmount)}
               </p>
             )}
           </div>

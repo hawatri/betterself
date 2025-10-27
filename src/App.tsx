@@ -421,6 +421,7 @@ function App() {
                 previousDayData={appData.dailyData[formatDate(new Date(selectedDate.getTime() - 24 * 60 * 60 * 1000))]}
                 dailyTarget={appData.dailyTarget}
                 remainingCredit={remainingCredit}
+                availableSavings={availableSavings}
                 onUpdateDailyData={(data) => updateDailyData(formatDate(selectedDate), data)}
                 onUpdateSavings={async (amount: number, dailySavingsData?: Partial<DailyData>) => {
                   console.log("=== onUpdateSavings called ===");

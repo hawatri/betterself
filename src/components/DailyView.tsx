@@ -13,6 +13,7 @@ interface DailyViewProps {
   previousDayData?: DailyData;
   dailyTarget: number;
   remainingCredit: number;
+  availableSavings: number;
   onUpdateDailyData: (data: Partial<DailyData>) => void;
   onUpdateSavings: (amount: number, dailySavingsData?: Partial<DailyData>) => void;
   onRecordExcessSpending: (amount: number, reason: string) => void;
@@ -24,6 +25,7 @@ const DailyView: React.FC<DailyViewProps> = ({
   previousDayData,
   dailyTarget,
   remainingCredit,
+  availableSavings,
   onUpdateDailyData,
   onUpdateSavings,
   onRecordExcessSpending
@@ -535,6 +537,7 @@ const DailyView: React.FC<DailyViewProps> = ({
           onSave={borrowMoney}
           onClose={() => setShowBorrowModal(false)}
           type="borrow"
+          maxAmount={availableSavings}
         />
       )}
 
@@ -553,6 +556,7 @@ const DailyView: React.FC<DailyViewProps> = ({
           onClose={() => setShowEditBorrowModal(false)}
           type="borrow"
           initialValue={dailyData.borrowed || 0}
+          maxAmount={availableSavings + (dailyData.borrowed || 0)}
         />
       )}
 
