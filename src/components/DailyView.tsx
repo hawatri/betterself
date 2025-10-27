@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, CreditCard, CheckSquare, Square, FileText, TrendingUp, TrendingDown, AlertCircle, PiggyBank, Trash2, X, Edit, Trash } from 'lucide-react';
+import { Plus, CreditCard, CheckSquare, Square, FileText, TrendingUp, TrendingDown, AlertCircle, PiggyBank, Trash2, X, Edit, Trash, Clock } from 'lucide-react';
 import { formatCurrency, formatDate } from '../utils/dateUtils';
 import type { DailyData, SpendingEntry, Task } from '../types';
 import SpendingModal from './SpendingModal';
@@ -60,7 +60,11 @@ const DailyView: React.FC<DailyViewProps> = ({
     if (previousDayData && previousDayData.tasks && (!dailyData.tasks || dailyData.tasks.length === 0)) {
       const incompleteTasks = previousDayData.tasks
         .filter(task => !task.completed)
-        .map(task => ({ ...task, id: `${task.id}-carried`, createdDate: formatDate(selectedDate) }));
+        .map(task => ({ 
+          ...task, 
+          id: `${task.id}-carried`, 
+          createdDate: task.createdDate || formatDate(selectedDate) // Preserve original date
+        }));
       
       if (incompleteTasks.length > 0) {
         onUpdateDailyData({ tasks: incompleteTasks });
@@ -437,37 +441,55 @@ const DailyView: React.FC<DailyViewProps> = ({
             </div>
 
             <div className="space-y-3">
-              {dailyData.tasks?.map((task) => (
-                <div
-                  key={task.id}
-                  className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                >
-                  <button
-                    onClick={() => toggleTask(task.id)}
-                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              {dailyData.tasks?.map((task) => {
+                const isCarriedOver = task.createdDate !== formatDate(selectedDate);
+                return (
+                  <div
+                    key={task.id}
+                    className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                      isCarriedOver 
+                        ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/30' 
+                        : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
+                    }`}
                   >
-                    {task.completed ? (
-                      <CheckSquare className="w-5 h-5 text-green-600" />
-                    ) : (
-                      <Square className="w-5 h-5" />
-                    )}
-                  </button>
-                  <div className="flex-1">
-                    <p className={`${task.completed ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-50'}`}>
-                      {task.description}
-                    </p>
-                    {task.createdDate !== formatDate(selectedDate) && (
-                      <p className="text-xs text-blue-600 dark:text-blue-400">Carried over</p>
-                    )}
+                    <button
+                      onClick={() => toggleTask(task.id)}
+                      className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    >
+                      {task.completed ? (
+                        <CheckSquare className="w-5 h-5 text-green-600" />
+                      ) : (
+                        <Square className="w-5 h-5" />
+                      )}
+                    </button>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <p className={`${task.completed ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-50'}`}>
+                          {task.description}
+                        </p>
+                        {isCarriedOver && (
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-xs font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded-full">
+                            <Clock className="w-3 h-3" />
+                            <span>Previous Day</span>
+                          </span>
+                        )}
+                      </div>
+                      {isCarriedOver && task.createdDate && (
+                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                          From: {new Date(task.createdDate).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => deleteTask(task.id)}
+                      className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors text-sm"
+                    >
+                      Delete
+                    </button>
                   </div>
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors text-sm"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )) || (
+                );
+              })}
+              {(!dailyData.tasks || dailyData.tasks.length === 0) && (
                 <p className="text-gray-500 dark:text-gray-400 text-center py-4">No tasks yet</p>
               )}
             </div>
