@@ -223,9 +223,13 @@ function App() {
       const currentExcessSpending = dailyDataToUpdate.excessSpending || 0;
       const newExcessSpending = currentExcessSpending + amount;
       
+      // If there's already an excess spending reason, append the new reason with a "+" separator
+      const currentReason = dailyDataToUpdate.excessSpendingReason || '';
+      const newReason = currentReason ? `${currentReason} + ${reason}` : reason;
+      
       await updateDailyData(date, {
         excessSpending: newExcessSpending,
-        excessSpendingReason: reason
+        excessSpendingReason: newReason
       });
     } catch (error) {
       console.error("Failed to record excess spending:", error);
