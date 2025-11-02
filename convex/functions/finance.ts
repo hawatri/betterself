@@ -85,65 +85,6 @@ export const getDailyData = query({
   },
 });
 
-// Get all user's daily data for a specified month
-export const getDailyDataForMonth = query({
-  args: {
-    year: v.number(),
-    month: v.number(), // 0-11 like Date.getMonth()
-  },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    console.log("Getting daily data for user:", identity?.subject, "year:", args.year, "month:", args.month);
-    if (identity === null) {
-      console.log("User not authenticated");
-      return {};
-    }
-    
-    // Format the month as YYYY-MM
-    const monthString = `${args.year}-${String(args.month + 1).padStart(2, '0')}`;
-    console.log("Month string:", monthString);
-    
-    // Get the next month for the range filter
-    const nextMonth = new Date(args.year, args.month + 1, 1);
-    const nextMonthString = `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, '0')}`;
-    console.log("Next month string:", nextMonthString);
-    
-    // Get all daily data for the specified month
-    const dailyDataList = await ctx.db
-      .query("dailyData")
-      .filter((q) => 
-        q.and(
-          q.eq(q.field("userId"), identity.subject),
-          q.gte(q.field("date"), monthString),
-          q.lt(q.field("date"), nextMonthString)
-        )
-      )
-      .collect();
-    
-    console.log("Found daily data list:", dailyDataList);
-    
-    // Convert array to object with date as key
-    const dailyDataObject: Record<string, unknown> = {};
-    dailyDataList.forEach(dailyData => {
-      dailyDataObject[dailyData.date] = {
-        spending: dailyData.spending,
-        tasks: dailyData.tasks,
-        notes: dailyData.notes,
-        due: dailyData.due,
-        savingsTransferred: dailyData.savingsTransferred,
-        borrowed: dailyData.borrowed,
-        excessSpending: dailyData.excessSpending,
-        excessSpendingReason: dailyData.excessSpendingReason,
-        createdAt: dailyData.createdAt,
-        updatedAt: dailyData.updatedAt,
-      };
-    });
-    
-    console.log("Returning daily data object:", dailyDataObject);
-    return dailyDataObject;
-  },
-});
-
 // Get all user's daily data for the current month
 export const getAllDailyData = query({
   args: {},
@@ -182,6 +123,65 @@ export const getAllDailyData = query({
         q.and(
           q.eq(q.field("userId"), identity.subject),
           q.gte(q.field("date"), userData.currentMonth),
+          q.lt(q.field("date"), nextMonthString)
+        )
+      )
+      .collect();
+    
+    console.log("Found daily data list:", dailyDataList);
+    
+    // Convert array to object with date as key
+    const dailyDataObject: Record<string, unknown> = {};
+    dailyDataList.forEach(dailyData => {
+      dailyDataObject[dailyData.date] = {
+        spending: dailyData.spending,
+        tasks: dailyData.tasks,
+        notes: dailyData.notes,
+        due: dailyData.due,
+        savingsTransferred: dailyData.savingsTransferred,
+        borrowed: dailyData.borrowed,
+        excessSpending: dailyData.excessSpending,
+        excessSpendingReason: dailyData.excessSpendingReason,
+        createdAt: dailyData.createdAt,
+        updatedAt: dailyData.updatedAt,
+      };
+    });
+    
+    console.log("Returning daily data object:", dailyDataObject);
+    return dailyDataObject;
+  },
+});
+
+// Get all user's daily data for a specified month
+export const getDailyDataForMonth = query({
+  args: {
+    year: v.number(),
+    month: v.number(), // 0-11 like Date.getMonth()
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    console.log("Getting daily data for user:", identity?.subject, "year:", args.year, "month:", args.month);
+    if (identity === null) {
+      console.log("User not authenticated");
+      return {};
+    }
+    
+    // Format the month as YYYY-MM
+    const monthString = `${args.year}-${String(args.month + 1).padStart(2, '0')}`;
+    console.log("Month string:", monthString);
+    
+    // Get the next month for the range filter
+    const nextMonth = new Date(args.year, args.month + 1, 1);
+    const nextMonthString = `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, '0')}`;
+    console.log("Next month string:", nextMonthString);
+    
+    // Get all daily data for the specified month
+    const dailyDataList = await ctx.db
+      .query("dailyData")
+      .filter((q) => 
+        q.and(
+          q.eq(q.field("userId"), identity.subject),
+          q.gte(q.field("date"), monthString),
           q.lt(q.field("date"), nextMonthString)
         )
       )

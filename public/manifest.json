@@ -1,6 +1,6 @@
 {
-  "name": "FinanceFlow",
-  "short_name": "FinanceFlow",
+  "name": "BetterSelf",
+  "short_name": "BetterSelf",
   "description": "Personal Finance and Productivity App",
   "start_url": ".",
   "display": "standalone",
