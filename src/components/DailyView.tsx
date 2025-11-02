@@ -38,6 +38,7 @@ const DailyView: React.FC<DailyViewProps> = ({
   const [notes, setNotes] = useState(dailyData.notes || '');
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [showEditBorrowModal, setShowEditBorrowModal] = useState(false);
+  const [showDeleteExcessSpendingConfirm, setShowDeleteExcessSpendingConfirm] = useState(false);
 
   // Update notes state when dailyData.notes changes
   useEffect(() => {
@@ -233,6 +234,19 @@ const DailyView: React.FC<DailyViewProps> = ({
     });
   };
 
+  const confirmDeleteExcessSpending = () => {
+    // Reset excess spending to 0
+    onUpdateDailyData({ 
+      excessSpending: 0,
+      excessSpendingReason: undefined
+    });
+    setShowDeleteExcessSpendingConfirm(false);
+  };
+
+  const cancelDeleteExcessSpending = () => {
+    setShowDeleteExcessSpendingConfirm(false);
+  };
+
   return (
     <div className="space-y-6">
       {/* Daily Summary Cards */}
@@ -418,6 +432,13 @@ const DailyView: React.FC<DailyViewProps> = ({
                   </div>
                   <div className="flex items-center space-x-3">
                     <p className="font-semibold text-red-600">{formatCurrency(dailyData.excessSpending)}</p>
+                    <button
+                      onClick={() => setShowDeleteExcessSpendingConfirm(true)}
+                      className="p-1 text-red-500 hover:text-red-700 dark:hover:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-colors"
+                      title="Delete excess spending entry"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               )}
@@ -610,6 +631,44 @@ const DailyView: React.FC<DailyViewProps> = ({
                 </button>
                 <button
                   onClick={confirmDeleteSpending}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Excess Spending Confirmation Dialog */}
+      {showDeleteExcessSpendingConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50">Delete Excess Spending Entry</h2>
+              <button
+                onClick={cancelDeleteExcessSpending}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <p className="text-gray-700 dark:text-gray-300 mb-6">
+                Are you sure you want to delete this excess spending entry? This action cannot be undone.
+              </p>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={cancelDeleteExcessSpending}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDeleteExcessSpending}
                   className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Delete
