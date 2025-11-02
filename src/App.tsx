@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Calendar, CreditCard, Clock, Target, PiggyBank, Sun, Moon, Plus } from 'lucide-react';
+import { Calendar, CreditCard, Clock, Target, PiggyBank, Sun, Moon, Plus, X } from 'lucide-react';
 import { Authenticated, Unauthenticated, AuthLoading, useQuery, useMutation } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import { SignInButton, UserButton, useAuth } from '@clerk/clerk-react';
@@ -103,6 +103,7 @@ function App() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showMonthlySetup, setShowMonthlySetup] = useState(false);
   const [showAddSavingsModal, setShowAddSavingsModal] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [theme, setTheme] = useTheme();
   const [authTimeout, setAuthTimeout] = useState(false);
   const { isLoaded } = useAuth();
@@ -345,7 +346,8 @@ function App() {
                 </div>
               </div>
               
-              <div className="flex items-center space-x-6">
+              {/* Desktop Navigation - Hidden on mobile */}
+              <div className="hidden md:flex items-center space-x-6">
                 <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                   <Clock className="w-4 h-4" />
                   <span>{getCurrentDateTime()}</span>
@@ -377,7 +379,67 @@ function App() {
                   <span>Setup Month</span>
                 </button>
               </div>
+              
+              {/* Mobile Menu Button - Visible only on mobile */}
+              <div className="md:hidden flex items-center">
+                <button
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  {showMobileMenu ? (
+                    <X className="w-6 h-6" />
+                  ) : (
+                    <div className="w-6 h-6 flex flex-col justify-center space-y-1">
+                      <span className="block w-full h-0.5 bg-gray-700 dark:bg-gray-300"></span>
+                      <span className="block w-full h-0.5 bg-gray-700 dark:bg-gray-300"></span>
+                      <span className="block w-full h-0.5 bg-gray-700 dark:bg-gray-300"></span>
+                    </div>
+                  )}
+                </button>
+              </div>
             </div>
+            
+            {/* Mobile Menu - Visible only on mobile when toggled */}
+            {showMobileMenu && (
+              <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                      <Clock className="w-4 h-4" />
+                      <span>{getCurrentDateTime()}</span>
+                    </div>
+                    <button
+                      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                      className="flex items-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+                      <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <UserButton 
+                      appearance={{
+                        elements: {
+                          avatarBox: "w-8 h-8"
+                        }
+                      }}
+                    />
+                    
+                    <button
+                      onClick={() => {
+                        setShowMonthlySetup(true);
+                        setShowMobileMenu(false);
+                      }}
+                      className="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      <Target className="w-4 h-4" />
+                      <span>Setup Month</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
