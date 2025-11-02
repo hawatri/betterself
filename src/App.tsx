@@ -658,6 +658,26 @@ function App() {
           </div>
         </div>
       </AuthLoading>
+      
+      {/* Support Section - Always visible at the bottom */}
+      <div className="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <p className="text-gray-600 dark:text-gray-400">
+              For any support or bugs found, please contact us at{' '}
+              <a 
+                href="mailto:kiahawatri@gmail.com" 
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                kiahawatri@gmail.com
+              </a>
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+              We're here to help you manage your finances better
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
