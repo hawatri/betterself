@@ -251,6 +251,45 @@ function App() {
     }
   };
 
+  // Transfer full remaining credit to savings
+  const transferRemainingToSavings = async () => {
+    if (remainingCredit <= 0) return;
+    
+    try {
+      // Confirm with user
+      const confirmed = window.confirm(`Are you sure you want to transfer ${formatCurrency(remainingCredit)} to savings?`);
+      if (!confirmed) return;
+      
+      // Update total savings
+      const updatedAppData = {
+        ...appData,
+        totalSavings: appData.totalSavings + remainingCredit
+      };
+      
+      // Save updated finance data
+      const convexData = convertAppDataToConvex(updatedAppData);
+      await saveFinanceData({ data: convexData });
+      
+      // Also record this as an excess spending entry so it affects remaining credit calculation
+      const selectedDateStr = formatDate(selectedDate);
+      const dailyDataToUpdate = appData.dailyData[selectedDateStr] || {};
+      
+      // Get existing excess spending amount and reason
+      const currentExcessSpending = dailyDataToUpdate.excessSpending || 0;
+      const currentExcessSpendingReason = dailyDataToUpdate.excessSpendingReason || '';
+      
+      // Update excess spending (this affects remaining credit calculation)
+      await updateDailyData(selectedDateStr, {
+        excessSpending: currentExcessSpending + remainingCredit,
+        excessSpendingReason: currentExcessSpendingReason 
+          ? `${currentExcessSpendingReason} + Transfer to savings: ${formatCurrency(remainingCredit)}`
+          : `Transfer to savings: ${formatCurrency(remainingCredit)}`
+      });
+    } catch (error) {
+      console.error("Failed to transfer remaining credit to savings:", error);
+    }
+  };
+
   const getCurrentDateTime = () => {
     return currentDate.toLocaleString('en-US', {
       weekday: 'long',
@@ -364,7 +403,18 @@ function App() {
                       {formatCurrency(remainingCredit)}
                     </p>
                   </div>
-                  <CreditCard className="w-8 h-8 text-blue-200" />
+                  <div className="flex items-center space-x-2">
+                    <CreditCard className="w-8 h-8 text-blue-200" />
+                    {remainingCredit > 0 && (
+                      <button
+                        onClick={transferRemainingToSavings}
+                        className="p-2 bg-green-500 dark:bg-green-600 rounded-full hover:bg-green-600 dark:hover:bg-green-700 transition-colors"
+                        title="Transfer all remaining credit to savings"
+                      >
+                        <PiggyBank className="w-5 h-5 text-white" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
               
@@ -511,7 +561,7 @@ function App() {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Welcome to BetterSelf</h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-8">Sign in to manage your finances</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">Sign in to manage your finances & be Productive</p>
             <SignInButton mode="modal">
               <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 Sign In
