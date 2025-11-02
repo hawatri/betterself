@@ -98,6 +98,8 @@ const convertAppDataToConvex = (appData: AppData): Omit<ConvexFinanceData, '_id'
 function App() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
+  const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());
   const [showCalendar, setShowCalendar] = useState(false);
   const [showMonthlySetup, setShowMonthlySetup] = useState(false);
   const [showAddSavingsModal, setShowAddSavingsModal] = useState(false);
@@ -108,6 +110,10 @@ function App() {
   // Load finance data from Convex only when authenticated
   const financeData = useQuery(api.functions.finance.getFinanceData);
   const allDailyData = useQuery(api.functions.finance.getAllDailyData);
+  const monthlyDailyData = useQuery(api.functions.finance.getDailyDataForMonth, { 
+    year: calendarYear, 
+    month: calendarMonth 
+  });
   
   // Mutations for saving data
   const saveFinanceData = useMutation(api.functions.finance.saveFinanceData);
@@ -118,10 +124,15 @@ function App() {
   const appData: AppData = useMemo(() => {
     console.log("Finance data:", financeData);
     console.log("All daily data:", allDailyData);
-    const result = convertConvexToAppData(financeData, allDailyData);
+    console.log("Monthly daily data:", monthlyDailyData);
+    
+    // Merge all daily data sources
+    const mergedDailyData = { ...allDailyData, ...monthlyDailyData };
+    
+    const result = convertConvexToAppData(financeData, mergedDailyData);
     console.log("Converted app data:", result);
     return result;
-  }, [financeData, allDailyData]);
+  }, [financeData, allDailyData, monthlyDailyData]);
   
   // Set a timeout for authentication loading
   useEffect(() => {
@@ -150,6 +161,12 @@ function App() {
     const timer = setInterval(() => setCurrentDate(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
+
+  // Update calendar month/year when selectedDate changes
+  useEffect(() => {
+    setCalendarMonth(selectedDate.getMonth());
+    setCalendarYear(selectedDate.getFullYear());
+  }, [selectedDate]);
 
   const updateMonthlySetup = async (monthlyCredit: number, dailyTarget: number) => {
     try {
@@ -401,6 +418,10 @@ function App() {
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
                     dailyData={appData.dailyData}
+                    onMonthChange={(month, year) => {
+                      setCalendarMonth(month);
+                      setCalendarYear(year);
+                    }}
                   />
                 )}
                 

@@ -7,35 +7,52 @@ interface CalendarViewProps {
   selectedDate: Date;
   onDateSelect: (date: Date) => void;
   dailyData: { [date: string]: DailyData };
+  onMonthChange?: (month: number, year: number) => void;
 }
 
-const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect, dailyData }) => {
+const CalendarView: React.FC<CalendarViewProps> = ({ selectedDate, onDateSelect, dailyData, onMonthChange }) => {
   const [currentMonth, setCurrentMonth] = React.useState(selectedDate.getMonth());
   const [currentYear, setCurrentYear] = React.useState(selectedDate.getFullYear());
 
-  // Update calendar view when selectedDate changes
-  React.useEffect(() => {
-    setCurrentMonth(selectedDate.getMonth());
-    setCurrentYear(selectedDate.getFullYear());
-  }, [selectedDate]);
-
   const navigateMonth = (direction: 'prev' | 'next') => {
+    let newMonth = currentMonth;
+    let newYear = currentYear;
+    
     if (direction === 'prev') {
       if (currentMonth === 0) {
-        setCurrentMonth(11);
-        setCurrentYear(currentYear - 1);
+        newMonth = 11;
+        newYear = currentYear - 1;
       } else {
-        setCurrentMonth(currentMonth - 1);
+        newMonth = currentMonth - 1;
       }
     } else {
       if (currentMonth === 11) {
-        setCurrentMonth(0);
-        setCurrentYear(currentYear + 1);
+        newMonth = 0;
+        newYear = currentYear + 1;
       } else {
-        setCurrentMonth(currentMonth + 1);
+        newMonth = currentMonth + 1;
       }
     }
+    
+    setCurrentMonth(newMonth);
+    setCurrentYear(newYear);
+    
+    // Notify parent component of month change
+    if (onMonthChange) {
+      onMonthChange(newMonth, newYear);
+    }
   };
+
+  // Update calendar view when selectedDate changes, but only update if we're not already on that month
+  React.useEffect(() => {
+    const selectedMonth = selectedDate.getMonth();
+    const selectedYear = selectedDate.getFullYear();
+    
+    if (currentMonth !== selectedMonth || currentYear !== selectedYear) {
+      setCurrentMonth(selectedMonth);
+      setCurrentYear(selectedYear);
+    }
+  }, [selectedDate]);
 
   const daysInMonth = getDaysInMonth(currentYear, currentMonth);
   const firstDayOfMonth = createLocalDate(currentYear, currentMonth, 1).getDay();
