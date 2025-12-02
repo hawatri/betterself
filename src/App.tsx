@@ -620,15 +620,178 @@ function App() {
       </Authenticated>
       
       <Unauthenticated>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Welcome to BetterSelf</h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-8">Sign in to manage your finances & be Productive</p>
-            <SignInButton mode="modal">
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                Sign In
-              </button>
-            </SignInButton>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+          {/* Hero Section */}
+          <div className="container mx-auto px-4 py-16 md:py-24">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+              <div className="lg:w-1/2 text-center lg:text-left">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+                  Welcome to <span className="text-blue-600">BetterSelf</span>
+                </h1>
+                <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+                  Transform your financial habits and boost productivity with our all-in-one platform. 
+                  Take control of your money, manage daily tasks, and build a better version of yourself.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <SignInButton mode="modal" signUpForceRedirectUrl="/">
+                    <button className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                      Get Started - It's Free
+                    </button>
+                  </SignInButton>
+                  <SignInButton mode="modal" fallbackRedirectUrl="/">
+                    <button className="px-8 py-4 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-lg shadow-lg transition-all duration-300 border border-gray-300 dark:border-gray-600">
+                      Log In
+                    </button>
+                  </SignInButton>
+                </div>
+              </div>
+              <div className="lg:w-1/2 flex justify-center">
+                <div className="relative">
+                  <div className="absolute -top-6 -left-6 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+                  <div className="absolute -bottom-6 -right-6 w-64 h-64 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+                  <div className="relative rounded-2xl overflow-hidden border-8 border-white dark:border-gray-800 shadow-2xl">
+                    <img 
+                      src="/site-images/Full_site_Image.png" 
+                      alt="BetterSelf Dashboard" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Features Section */}
+          <div className="py-16 bg-white dark:bg-gray-800">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                  Powerful Features for Financial Success
+                </h2>
+                <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                  Everything you need to manage your finances, track spending, and stay productive
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                {/* Feature 1 */}
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <div className="mb-4">
+                    <div className="bg-blue-100 dark:bg-blue-900/50 w-14 h-14 rounded-lg flex items-center justify-center">
+                      <CreditCard className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Daily Spending Tracker</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    Easily track all your daily expenses and categorize them for better financial awareness.
+                  </p>
+                  <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
+                    <img 
+                      src="/site-images/Spending_Entries.png" 
+                      alt="Spending Entries" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* Feature 2 */}
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <div className="mb-4">
+                    <div className="bg-green-100 dark:bg-green-900/50 w-14 h-14 rounded-lg flex items-center justify-center">
+                      <Target className="w-8 h-8 text-green-600 dark:text-green-400" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Monthly Budget Goals</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    Set monthly financial targets and track your progress toward financial freedom.
+                  </p>
+                  <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
+                    <img 
+                      src="/site-images/Monthly_taget.png" 
+                      alt="Monthly Target" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* Feature 3 */}
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <div className="mb-4">
+                    <div className="bg-yellow-100 dark:bg-yellow-900/50 w-14 h-14 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Task Management</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    Stay organized with daily task lists that integrate with your financial goals.
+                  </p>
+                  <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
+                    <img 
+                      src="/site-images/Manage_Task.png" 
+                      alt="Task Management" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* Feature 5 */}
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <div className="mb-4">
+                    <div className="bg-red-100 dark:bg-red-900/50 w-14 h-14 rounded-lg flex items-center justify-center">
+                      <Clock className="w-8 h-8 text-red-600 dark:text-red-400" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Real-time Dashboard</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    Get instant insights into your financial health with our real-time dashboard.
+                  </p>
+                  <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
+                    <img 
+                      src="/site-images/Manage_Daily_Spendings_With_Dashboard.png" 
+                      alt="Financial Dashboard" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* Feature 6 */}
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <div className="mb-4">
+                    <div className="bg-indigo-100 dark:bg-indigo-900/50 w-14 h-14 rounded-lg flex items-center justify-center">
+                      <Sun className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Daily Improvement Notes</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    Reflect on your daily financial decisions and track improvements over time.
+                  </p>
+                  <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
+                    <img 
+                      src="/site-images/Daily_Notes_for_Daily_Improvements.png" 
+                      alt="Daily Improvement Notes" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Section */}
+          <div className="py-16 bg-gradient-to-r from-blue-600 to-indigo-700">
+            <div className="container mx-auto px-4 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Transform Your Financial Life?
+              </h2>
+              <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-10">
+                Get yourself among to those who have taken control of their finances and productivity with BetterSelf.
+              </p>
+              <SignInButton mode="modal">
+                <button className="px-8 py-4 bg-white text-blue-600 hover:bg-gray-100 font-bold rounded-lg shadow-lg text-lg transition-all duration-300 transform hover:-translate-y-1">
+                  Start Your Savings Today
+                </button>
+              </SignInButton>
+            </div>
           </div>
         </div>
       </Unauthenticated>
