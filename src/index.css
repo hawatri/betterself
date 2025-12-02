@@ -79,3 +79,26 @@
     }
   }
 }
+
+/* Text styling enhancements */
+@layer utilities {
+  .heading-hero {
+    @apply font-bold text-gray-900 dark:text-white;
+  }
+  
+  .heading-section {
+    @apply font-bold text-gray-900 dark:text-white mb-4;
+  }
+  
+  .text-featured {
+    @apply text-xl text-gray-700 dark:text-gray-300 leading-relaxed;
+  }
+  
+  .text-description {
+    @apply text-gray-600 dark:text-gray-400 leading-relaxed;
+  }
+  
+  .text-callout {
+    @apply text-blue-600 dark:text-blue-400 font-semibold;
+  }
+}

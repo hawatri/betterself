@@ -625,12 +625,11 @@ function App() {
           <div className="container mx-auto px-4 py-16 md:py-24">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
               <div className="lg:w-1/2 text-center lg:text-left">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl heading-hero mb-6">
                   Welcome to <span className="text-blue-600">BetterSelf</span>
                 </h1>
-                <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
-                  Transform your financial habits and boost productivity with our all-in-one platform. 
-                  Take control of your money, manage daily tasks, and build a better version of yourself.
+                <p className="text-xl text-featured mb-8">
+                  A simple tool to help you track your daily spending, manage tasks, and build better financial habits one day at a time.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                   <SignInButton mode="modal" signUpForceRedirectUrl="/">
@@ -665,11 +664,11 @@ function App() {
           <div className="py-16 bg-white dark:bg-gray-800">
             <div className="container mx-auto px-4">
               <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                  Powerful Features for Financial Success
+                <h2 className="text-3xl md:text-4xl heading-section mb-4">
+                  Simple Tools for Daily Financial Improvement
                 </h2>
-                <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                  Everything you need to manage your finances, track spending, and stay productive
+                <p className="text-xl text-description max-w-3xl mx-auto">
+                  Practical features to help you understand your spending patterns and stay organized
                 </p>
               </div>
 
@@ -681,9 +680,9 @@ function App() {
                       <CreditCard className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Daily Spending Tracker</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    Easily track all your daily expenses and categorize them for better financial awareness.
+                  <h3 className="text-xl heading-section mb-2">Daily Spending Tracker</h3>
+                  <p className="text-description mb-4">
+                    Track your daily expenses to understand where your money goes.
                   </p>
                   <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
                     <img 
@@ -701,9 +700,9 @@ function App() {
                       <Target className="w-8 h-8 text-green-600 dark:text-green-400" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Monthly Budget Goals</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    Set monthly financial targets and track your progress toward financial freedom.
+                  <h3 className="text-xl heading-section mb-2">Monthly Budget Goals</h3>
+                  <p className="text-description mb-4">
+                    Set simple monthly spending targets to stay within your means.
                   </p>
                   <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
                     <img 
@@ -721,9 +720,9 @@ function App() {
                       <Calendar className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Task Management</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    Stay organized with daily task lists that integrate with your financial goals.
+                  <h3 className="text-xl heading-section mb-2">Task Management</h3>
+                  <p className="text-description mb-4">
+                    Keep track of daily tasks that help you stay financially disciplined.
                   </p>
                   <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
                     <img 
@@ -741,9 +740,9 @@ function App() {
                       <Clock className="w-8 h-8 text-red-600 dark:text-red-400" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Real-time Dashboard</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    Get instant insights into your financial health with our real-time dashboard.
+                  <h3 className="text-xl heading-section mb-2">Real-time Dashboard</h3>
+                  <p className="text-description mb-4">
+                    See your spending patterns and progress at a glance.
                   </p>
                   <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
                     <img 
@@ -761,9 +760,9 @@ function App() {
                       <Sun className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Daily Improvement Notes</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    Reflect on your daily financial decisions and track improvements over time.
+                  <h3 className="text-xl heading-section mb-2">Daily Improvement Notes</h3>
+                  <p className="text-description mb-4">
+                    Reflect on your financial decisions and plan for better habits tomorrow.
                   </p>
                   <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
                     <img 
@@ -780,11 +779,11 @@ function App() {
           {/* CTA Section */}
           <div className="py-16 bg-gradient-to-r from-blue-600 to-indigo-700">
             <div className="container mx-auto px-4 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Ready to Transform Your Financial Life?
+              <h2 className="text-3xl md:text-4xl heading-section mb-6">
+                Start Building Better Financial Habits Today
               </h2>
-              <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-10">
-                Get yourself among to those who have taken control of their finances and productivity with BetterSelf.
+              <p className="text-xl text-description max-w-3xl mx-auto mb-10">
+                A simple tool to help you understand your spending and build better habits, one day at a time.
               </p>
               <SignInButton mode="modal">
                 <button className="px-8 py-4 bg-white text-blue-600 hover:bg-gray-100 font-bold rounded-lg shadow-lg text-lg transition-all duration-300 transform hover:-translate-y-1">
